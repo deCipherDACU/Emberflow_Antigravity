@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emberflow - Phase 1 Demo</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: rgba(30, 30, 50, 0.7);
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(ellipse at top, rgba(99, 102, 241, 0.15), transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.1), transparent 50%);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card h2::before {
+            content: '';
+            width: 4px;
+            height: 1.2rem;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .stat {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+        
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        
+        .risk-high { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); }
+        .risk-moderate { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--warning); }
+        .risk-low { background: rgba(34, 197, 94, 0.2); border: 1px solid var(--success); }
+        
+        .risk-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .risk-high .risk-icon { background: var(--danger); }
+        .risk-moderate .risk-icon { background: var(--warning); }
+        .risk-low .risk-icon { background: var(--success); }
+        
+        .risk-message {
+            flex: 1;
+        }
+        
+        .risk-message h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .risk-message p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .mood-log {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .mood-entry {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+        
+        .mood-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .mood-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #ec4899);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Emberflow</h1>
+    <p class="subtitle">Phase 1: User Segmentation & Wellness Demo</p>
+    
+    <div class="container">
+        <!-- User Profile Card -->
+        <div class="card">
+            <h2>User Profile</h2>
+            <div class="profile-grid">
+                <div class="stat">
+                    <div class="stat-label">Learning Style</div>
+                    <div class="stat-value">📊 Visual</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Motivation Type</div>
+                    <div class="stat-value">🧘 Intrinsic</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Focus Strength</div>
+                    <div class="stat-value">⚖️ Moderate</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Daily Availability</div>
+                    <div class="stat-value">⏰ 4-6 hrs</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Experience Level</div>
+                    <div class="stat-value">🎯 Advanced</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Recommended Load</div>
+                    <div class="stat-value">📋 6 tasks/day</div>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <div class="stat-label">Pain Points</div>
+                <div class="tags">
+                    <span class="tag">Overwhelm</span>
+                    <span class="tag">Consistency</span>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <div class="stat-label">Motivational Triggers</div>
+                <div class="tags">
+                    <span class="tag">Mastery</span>
+                    <span class="tag">Personal Growth</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wellness Card -->
+        <div class="card">
+            <h2>Wellness Engine</h2>
+            <div class="profile-grid">
+                <div class="stat">
+                    <div class="stat-label">Baseline Mood</div>
+                    <div class="stat-value">😐 3/5 (Okay)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Stress Level</div>
+                    <div class="stat-value">⚠️ Moderate</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Burnout Threshold</div>
+                    <div class="stat-value">🛡️ 10 tasks/day</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Current Load</div>
+                    <div class="stat-value">📈 10 tasks/day</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <div class="stat-label">Recent Mood Log (7 days)</div>
+                <div class="mood-log">
+                    <div class="mood-entry"><div class="mood-emoji">😞</div><div class="mood-label">Mon</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😐</div><div class="mood-label">Tue</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😞</div><div class="mood-label">Wed</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😐</div><div class="mood-label">Thu</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😞</div><div class="mood-label">Fri</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😐</div><div class="mood-label">Sat</div></div>
+                    <div class="mood-entry"><div class="mood-emoji">😞</div><div class="mood-label">Sun</div></div>
+                </div>
+            </div>
+            
+            <!-- Risk Indicator -->
+            <div class="risk-indicator risk-high">
+                <div class="risk-icon">⚡</div>
+                <div class="risk-message">
+                    <h3>Burnout Risk: HIGH</h3>
+                    <p>You've been pushing hard. It's okay to take a rest day. Your streak will be paused, not broken.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Card -->
+        <div class="card">
+            <h2>Performance Metrics</h2>
+            <div class="profile-grid">
+                <div class="stat">
+                    <div class="stat-label">Completion Rate</div>
+                    <div class="stat-value">50%</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 50%;"></div></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Streak Vulnerability</div>
+                    <div class="stat-value">0 days buffer</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Emberflow Phase 1 Demo • Compassionate Productivity Engine</p>
+    </footer>
+</body>
+</html>
